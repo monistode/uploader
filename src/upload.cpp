@@ -1,23 +1,5 @@
-#include <cstring>
-#include <fstream>
-#include <iostream>
-#include <string>
-#include <vector>
-
-#include <fcntl.h>
-#include <sys/mman.h>
-#include <unistd.h>
-
-// Errorrs
-static constexpr int SUCCESS = 0;
-static constexpr int FILE_ERR = -1;
-static constexpr int DEV_MEM_ERR = -2;
-static constexpr int MMAP_ERR = -3;
-static constexpr int MUNMAP_ERR = -4;
-
-// Constants
-static constexpr size_t MEM_START = 0x20'000'000; // 512 Mb
-static constexpr size_t PRG_MEM_SIZE = 0x10'000;  // 64 Kb
+#include "common.hpp"
+#include "exec_reader.hpp"
 
 class ObjectParser {
     std::vector<unsigned char> mem;
@@ -120,7 +102,7 @@ int main(int argc, char **argv) {
         std::cerr << "Usage: uload <filename>" << std::endl;
     }
 
-    ProgramMemory mapper = ProgramMemory<ObjectParser>(argv[1]);
+    ProgramMemory mapper = ProgramMemory<ExecReader>(argv[1]);
     int result = mapper.writeProgram();
 
     return result;
